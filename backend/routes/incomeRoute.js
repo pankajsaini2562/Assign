@@ -11,5 +11,5 @@ router.post("/", isAuth, addIncome);
 //Get income
 router.get("/", getIncome);
 // Lock monthly  income
-router.post("/month/:id", isAuth, lockIncome);
+router.post("/lock/:id", isAuth, lockIncome);
 export default router;

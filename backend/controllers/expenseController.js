@@ -41,38 +41,18 @@ export const addExpense = async (req, res) => {
 //edit expense
 export const editExpense = async (req, res) => {
   const { id } = req.params;
-  const { title, amount, category, date } = req.body;
+  const editExpense = {
+    title: req.body.title,
+    amount: req.body.amount,
+    category: req.body.category,
+    date: req.body.date,
+  };
   try {
-    const expense = await Expense.findById(id);
-    if (!expense) return res.status(404).json({ msg: "Expense not found" });
-
-    const income = await Income.findOne({
-      userId: req.user,
-      month: new Date(date)
-        .toLocaleString("default", {
-          month: "long",
-        })
-        .toLowerCase(),
+    const editedExpense = await Expense.findByIdAndUpdate(id, editExpense, {
+      new: true,
     });
-    if (!income)
-      return res.status(404).json({ msg: "Income for this month not found" });
-    if (income.isLocked)
-      return res.status(400).json({ msg: "Income for this month is locked" });
 
-    const oldExpense = await Expense.findById(id);
-    income.amount += oldExpense.amount - amount;
-    if (income.amount < 0)
-      return res.status(400).json({ msg: "Insufficient income" });
-
-    expense.title = title;
-    expense.amount = amount;
-    expense.category = category;
-    expense.date = date;
-
-    await expense.save();
-    await income.save();
-
-    res.json({ success: true, expense });
+    res.json({ success: true, editedExpense });
   } catch (error) {
     res.status(501).json({ msg: error.message });
   }

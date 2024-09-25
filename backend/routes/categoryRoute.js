@@ -2,8 +2,8 @@ import express from "express";
 import { addCategory, getCategory } from "../controllers/categoryController.js";
 import isAuth from "../middleware/authMiddleware.js";
 const router = express.Router();
-//Add income
+//Add category
 router.post("/add", isAuth, addCategory);
-// Lock income
-router.post("/", isAuth, getCategory);
+// list category
+router.get("/", isAuth, getCategory);
 export default router;
